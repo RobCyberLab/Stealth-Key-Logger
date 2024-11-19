@@ -1,13 +1,13 @@
 # 🕵️‍♂️Stealth Key Logger🔑
 
 ## Table of Contents
-1. [Introduction](#introduction-)
-2. [Technical Description](#technical-description-)
-3. [Technologies Used](#technologies-used-)
-4. [Main Features](#main-features-)
-5. [Use Cases](#use-cases-)
-6. [Results and Insights](#results-and-insights-)
-7. [Possible Improvements](#possible-improvements-)
+1. [Introduction](#introduction)
+2. [Technical Description](#technical-description)
+3. [Technologies Used](#technologies-used)
+4. [Main Features](#main-features)
+5. [Use Cases](#use-cases)
+6. [Results and Insights](#results-and-insights)
+7. [Possible Improvements](#possible-improvements)
 
 ## Introduction📘
 This Advanced Windows Keylogger is a C++ implementation demonstrating low-level keyboard monitoring and logging capabilities in Windows systems. The project showcases system programming concepts, Windows API usage, and event handling mechanisms. This educational tool provides insights into keyboard input processing, system hooks, and logging methodologies.
