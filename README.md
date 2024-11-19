@@ -39,11 +39,6 @@ int Save(int key_stroke) {
   - Window management
   - Process/Thread handling
   - System metrics
-  
-- **System Programming**: 
-  - Low-level event handling
-  - Process stealth capabilities
-  - System boot detection
 
 ## Main Features🌟
 - **Advanced Keystroke Logging**:
