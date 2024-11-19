@@ -103,7 +103,7 @@ Log Output:
 [Window: *Hello_World - Notepad - at 2024-11-19T22:08:58+0200] hello_world
 ```
 <p align="center">
- <img src="ex1.png" alt="Ex1" width="500">
+ <img src="ex1.png" alt="Ex1" width="700">
   <br>  <em>Basic text input logging with window information</em>
 </p>
 
@@ -113,7 +113,7 @@ Log Output:
 [Window: Fila noua – Google Chrome - at 2024-11-19T22:41:21+0200] user[RSHIFT]@gmail.com[TAB]password1234.
 ```
 <p align="center">
- <img src="ex2.png" alt="Ex2" width="500">
+ <img src="ex2.png" alt="Ex2" width="700">
   <br>
   <em>Special key logging with formatting</em>
 </p>
@@ -126,7 +126,7 @@ Log Output:
 [Window: user@gmail.compassword1234. - Google Search – Google Chrome - at 2024-11-19T22:43:42+0200] search
 ```
 <p align="center">
- <img src="ex3.png" alt="Ex3" width="500">
+ <img src="ex3.png" alt="Ex3" width="700">
   <br>
   <em>Window change tracking with timestamps</em>
 </p>
