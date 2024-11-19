@@ -10,7 +10,7 @@
 7. [Possible Improvements](#possible-improvements)
 
 ## Introduction📘
-This Advanced Windows Keylogger is a C++ implementation demonstrating low-level keyboard monitoring and logging capabilities in Windows systems. The project showcases system programming concepts, Windows API usage, and event handling mechanisms. This educational tool provides insights into keyboard input processing, system hooks, and logging methodologies.
+This Advanced Windows Keylogger is a C++ implementation demonstrating keyboard monitoring and logging capabilities in Windows systems. The project showcases system programming concepts, Windows API usage, and event handling mechanisms. This educational tool provides insights into keyboard input processing, system hooks, and logging methodologies.
 
 ## Technical Description⚙️
 The keylogger implementation includes sophisticated keyboard monitoring and logging capabilities:
